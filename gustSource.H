@@ -59,24 +59,9 @@ protected:
 
     // Protected data
 
-        //- Disk area normal
-        vector diskDir_;
+        scalarList gustAmplitudes_;
 
-        //- Power coefficient
-        scalar Cp_;
-
-        //- Thrust coefficient
-        scalar Ct_;
-
-        //- Disk area
-        scalar diskArea_;
-
-        //- Upstream point sample
-        point upstreamPoint_;
-
-        //- Upstream cell ID
-        label upstreamCellId_;
-
+        scalarList gustFrequencies_;
 
 private:
 
@@ -129,30 +114,6 @@ public:
     // Member Functions
 
         // Access
-
-            //- Return Cp
-            scalar Cp() const
-            {
-                return Cp_;
-            }
-
-            //- Return Ct
-            scalar Ct() const
-            {
-                return Ct_;
-            }
-
-            //- Normal disk direction
-            const vector& diskDir() const
-            {
-                return diskDir_;
-            }
-
-            //- Disk area
-            scalar diskArea() const
-            {
-                return diskArea_;
-            }
 
 
          // Add explicit and implicit contributions

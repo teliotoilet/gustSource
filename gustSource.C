@@ -50,29 +50,17 @@ namespace fv
 
 void Foam::fv::gustSource::checkData() const
 {
-    if (magSqr(diskArea_) <= VSMALL)
+    if (gustAmplitudes_.size() != gustFrequencies_.size())
     {
         FatalErrorIn("Foam::fv::gustSource::checkData()")
-           << "diskArea is approximately zero"
+           << "different numbers of amplitudes and frequencies specified: "
+           << "w_g= " << gustAmplitudes_ << " "
+           << "omega_g= " << gustFrequencies_ << " "
            << exit(FatalIOError);
     }
-    if (Cp_ <= VSMALL || Ct_ <= VSMALL)
+    if (gustAmplitudes_.size() == 0)
     {
-        FatalErrorIn("Foam::fv::gustSource::checkData()")
-           << "Cp and Ct must be greater than zero"
-           << exit(FatalIOError);
-    }
-    if (mag(diskDir_) < VSMALL)
-    {
-        FatalErrorIn("Foam::fv::gustSource::checkData()")
-           << "disk direction vector is approximately zero"
-           << exit(FatalIOError);
-    }
-    if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
-    {
-        FatalErrorIn("Foam::fv::gustSource::checkData()")
-           << "upstream location " << upstreamPoint_  << " not found in mesh"
-           << exit(FatalIOError);
+        Info<< "Note: No amplitudes/frequencies specified" << endl;
     }
 }
 
@@ -88,20 +76,14 @@ Foam::fv::gustSource::gustSource
 )
 :
     option(name, modelType, dict, mesh),
-    diskDir_(coeffs_.lookup("diskDir")),
-    Cp_(readScalar(coeffs_.lookup("Cp"))),
-    Ct_(readScalar(coeffs_.lookup("Ct"))),
-    diskArea_(readScalar(coeffs_.lookup("diskArea"))),
-    upstreamPoint_(coeffs_.lookup("upstreamPoint")),
-    upstreamCellId_(-1)
+    gustAmplitudes_(readList<scalar>(coeffs_.lookup("amplitude"))),
+    gustFrequencies_(readList<scalar>(coeffs_.lookup("frequency")))
 {
     coeffs_.lookup("fieldNames") >> fieldNames_;
     applied_.setSize(fieldNames_.size(), false);
 
     Info<< "    - creating gusty zone: "
         << this->name() << endl;
-
-    upstreamCellId_ = mesh.findCell(upstreamPoint_);
 
     checkData();
 }
@@ -169,10 +151,8 @@ bool Foam::fv::gustSource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        coeffs_.readIfPresent("diskDir", diskDir_);
-        coeffs_.readIfPresent("Cp", Cp_);
-        coeffs_.readIfPresent("Ct", Ct_);
-        coeffs_.readIfPresent("diskArea", diskArea_);
+        coeffs_.readIfPresent("amplitude", gustAmplitudes_);
+        coeffs_.readIfPresent("frequency", gustFrequencies_);
 
         checkData();
 
