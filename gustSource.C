@@ -58,10 +58,6 @@ void Foam::fv::gustSource::checkData() const
            << "omega_g= " << gustFrequencies_ << " "
            << exit(FatalIOError);
     }
-    if (gustAmplitudes_.size() == 0)
-    {
-        Info<< "Note: No amplitudes/frequencies specified" << endl;
-    }
 }
 
 
@@ -79,9 +75,6 @@ Foam::fv::gustSource::gustSource
     gustAmplitudes_(readList<scalar>(coeffs_.lookup("amplitude"))),
     gustFrequencies_(readList<scalar>(coeffs_.lookup("frequency")))
 {
-    coeffs_.lookup("fieldNames") >> fieldNames_;
-    applied_.setSize(fieldNames_.size(), false);
-
     Info<< "    - creating gusty zone: "
         << this->name() << endl;
 
