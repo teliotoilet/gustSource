@@ -73,11 +73,20 @@ Foam::fv::gustSource::gustSource
 :
     option(name, modelType, dict, mesh),
     gustDirection_(coeffs_.lookup("direction")),
-    gustAmplitudes_(readList<scalar>(coeffs_.lookup("amplitude"))),
-    gustFrequencies_(readList<scalar>(coeffs_.lookup("frequency")))
+    gustAmplitudes_(coeffs_.lookup("amplitude")),
+    gustFrequencies_(coeffs_.lookup("frequency"))
 {
     Info<< "    - creating gusty zone: "
         << this->name() << endl;
+    Info<< "      in direction " << gustDirection_ << endl;
+    forAll(gustFrequencies_, mode)
+    {
+        Info<< "      mode " << mode << " : "
+            << " amplitude = " << gustAmplitudes_[mode] << ","
+            << " frequency = " << gustFrequencies_[mode] << " Hz" << endl;
+
+        gustFrequencies_[mode] *= 2*Foam::constant::mathematical::pi;
+    }
 
     checkData();
 }
