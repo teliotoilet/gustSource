@@ -76,9 +76,11 @@ Foam::fv::gustSource::gustSource
     gustAmplitudes_(coeffs_.lookup("amplitude")),
     gustFrequencies_(coeffs_.lookup("frequency"))
 {
-    Info<< "    - creating gusty zone: "
-        << this->name() << endl;
-    Info<< "      in direction " << gustDirection_ << endl;
+    coeffs_.lookup("fieldNames") >> fieldNames_;
+    applied_.setSize(fieldNames_.size(), false);
+
+    Info<< "    - creating gusty zone " << this->name() 
+        << " in direction " << gustDirection_ << endl;
     forAll(gustFrequencies_, mode)
     {
         Info<< "      mode " << mode << " : "
@@ -104,6 +106,8 @@ void Foam::fv::gustSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
+    //Info<< "adding gust to volume " << V() << endl;
+
     if (V() > VSMALL)
     {
         addGustMomenta
@@ -128,6 +132,8 @@ void Foam::fv::gustSource::addSup
     const scalarField& cellsV = mesh_.V();
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
+
+    //Info<< "adding (compressible) gust to volume " << V() << endl;
 
     if (V() > VSMALL)
     {
