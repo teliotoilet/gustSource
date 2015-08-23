@@ -58,10 +58,9 @@ class gustSource
 protected:
 
     // Protected data
-
-        scalarList gustAmplitudes_;
-
-        scalarList gustFrequencies_;
+        vector      gustDirection_;
+        scalarList  gustAmplitudes_;
+        scalarList  gustFrequencies_;
 
 private:
 

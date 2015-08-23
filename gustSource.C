@@ -72,6 +72,7 @@ Foam::fv::gustSource::gustSource
 )
 :
     option(name, modelType, dict, mesh),
+    gustDirection_(coeffs_.lookup("direction")),
     gustAmplitudes_(readList<scalar>(coeffs_.lookup("amplitude"))),
     gustFrequencies_(readList<scalar>(coeffs_.lookup("frequency")))
 {
