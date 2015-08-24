@@ -74,13 +74,19 @@ Foam::fv::gustSource::gustSource
     option(name, modelType, dict, mesh),
     gustDirection_(coeffs_.lookup("direction")),
     gustAmplitudes_(coeffs_.lookup("amplitude")),
-    gustFrequencies_(coeffs_.lookup("frequency"))
+    gustFrequencies_(coeffs_.lookup("frequency")),
+    r0_(coeffs_.lookup("sourceLocation")),
+    avec_(coeffs_.lookup("sourceDirection")),
+    sourceRadius_(readScalar(coeffs_.lookup("sourceRadius")))
 {
     coeffs_.lookup("fieldNames") >> fieldNames_;
     applied_.setSize(fieldNames_.size(), false);
 
     Info<< "    - creating gusty zone " << this->name() 
-        << " in direction " << gustDirection_ << endl;
+        << " with perturbation in direction " << gustDirection_ << endl;
+    Info<< "      centered at " << r0_ 
+        << " in direction " << avec_
+        << " with spread " << sourceRadius_ << endl;
     forAll(gustFrequencies_, mode)
     {
         Info<< "      mode " << mode << " : "

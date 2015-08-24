@@ -25,7 +25,9 @@ Class
     Foam::fv::gustSource
 
 Description
-    Provide a sinusoidal gust through perturbations to the momentum equation
+    Provide a sinusoidal gust through perturbations to the momentum equation.
+    Perturbations are applied uniformly along a specified line.
+
     Created from actuationDiskSource
 
 SourceFiles
@@ -61,6 +63,10 @@ protected:
         vector      gustDirection_;
         scalarList  gustAmplitudes_;
         scalarList  gustFrequencies_;
+
+        vector      r0_;
+        vector      avec_;
+        scalar      sourceRadius_;
 
 private:
 

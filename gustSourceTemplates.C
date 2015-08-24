@@ -38,17 +38,27 @@ void Foam::fv::gustSource::addGustMomenta
     const vectorField& U
 ) const
 {
+    scalar A(0.0);
+    scalar omg(0.0);
+    vector bvec(0.0,0.0,0.0);
+    vector rvec(0.0,0.0,0.0);
+    scalar expfn(0.0);
+
     scalar t = mesh().time().timeOutputValue();
+    vectorField cc(mesh().C().internalField());
 
     forAll(gustFrequencies_, mode)
     {
-        scalar A = gustAmplitudes_[mode];
-        scalar omg = gustFrequencies_[mode];
+        A = gustAmplitudes_[mode];
+        omg = gustFrequencies_[mode];
 
         forAll(cells, i)
         {
-            //Usource[cells[i]] += ((Vcells[cells[i]]/V())*T*E) & upU;
-            Usource[cells[i]] += A*sin(omg*t) * gustDirection_;
+            rvec = cc[cells[i]] - r0_;
+            bvec = rvec - (rvec & avec_)*avec_;
+            expfn = Foam::exp( -(bvec & bvec)/(2*sourceRadius_*sourceRadius_) );
+            //Usource[cells[i]] += A*sin(omg*t) * gustDirection_;
+            Usource[cells[i]] += A*sin(omg*t) * gustDirection_ * expfn;
         }
     }
 }
